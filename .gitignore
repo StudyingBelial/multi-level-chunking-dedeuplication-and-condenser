@@ -1,0 +1,62 @@
+# Compiled source #
+*.com
+*.class
+*.dll
+*.exe
+*.o
+*.so
+*.pyc
+*.pyo
+*.pyd
+*.out
+
+# Packages #
+*.7z
+*.dmg
+*.gz
+*.iso
+*.jar
+*.rar
+*.tar
+*.zip
+
+# Logs and databases #
+*.log
+*.sql
+*.sqlite
+*.csv
+*.txt
+
+# OS generated files #
+.DS_Store
+Thumbs.db
+ehthumbs.db
+Icon?
+Desktop.ini
+
+# Python virtual environments #
+venv/
+env/
+ENV/
+.venv/
+.env/
+
+# Node modules #
+node_modules/
+
+# IDE files #
+.vscode/
+.idea/
+*.sublime-workspace
+*.sublime-project
+
+# Git #
+*.orig
+
+# Custom ignores #
+dist/
+build/
+.cache/
+*.swp
+*.bak
+*.tmp
