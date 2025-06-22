@@ -25,7 +25,6 @@
 *.sql
 *.sqlite
 *.csv
-*.txt
 
 # OS generated files #
 .DS_Store
@@ -60,3 +59,6 @@ build/
 *.swp
 *.bak
 *.tmp
+
+# Temporary files
+tempCodeRunnerFile.py
