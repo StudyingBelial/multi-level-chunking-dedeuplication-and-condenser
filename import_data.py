@@ -1,9 +1,8 @@
 from datasets import load_dataset
 from huggingface_hub import login
 import pandas as pd
-import requests
+import csv
 import os
-import shutil
 
 def import_parade():
     # Repo to download from
@@ -32,6 +31,22 @@ def import_parade():
 
     os.chdir("..")
     os.chdir("..")
+
+    csv_file_path = "data/PARADE_dataset/parade.csv"
+    txt_file_path = "data/PARADE_dataset/parade.txt"
+
+    try:
+        with open(txt_file_path, "r", encoding="utf-8") as infile:
+            with open(csv_file_path, "w", encoding="utf-8") as outfile:
+                writer = csv.writer(outfile)
+                for line in infile:
+                    row = line.strip().split("\t")
+                    writer.writerow(row)
+    except FileNotFoundError:
+        print(f"Error: The file {txt_file_path} was not found.")
+    except Exception as e:
+        print(f"An error occurred: {e}")
+
     print("Loaded PARADE Dataset")
     
 def import_bbc(hf_key : str):
@@ -47,7 +62,6 @@ def import_bbc(hf_key : str):
 
     df = pd.DataFrame(texts, columns=["text"])
     df.to_csv("data/bbc.csv", index=False)
-
 
 def import_textbook(hf_key : str):
     login(hf_key)

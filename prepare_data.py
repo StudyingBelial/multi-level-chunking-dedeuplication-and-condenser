@@ -1,35 +1,37 @@
-import os
-import shutil
 import re
 import pandas as pd
 """
 the return value of all the functions in this file is a list of strings,
-each of those string represents a sentence
+each of those string represents an entire chunk of document,
+for the case of BBC it's an entire article sent,
+this if for the purpose of benchmarking of how the system can still preserve the semantic meanings after all is processing is done
 DO NOT TOUCH THE REGEX SUB in this file,
 I DO NOT UNDERSTAND MOST OF IT, the files will explode if you do.
 """
 def prep_parade() -> list:
     raw_data = []
-    file_path = "data/PARADE_dataset/parade.txt"
+    csv_file_path = "data/PARADE_dataset/parade.csv"
 
     try:
-        with open(file_path, 'r', encoding="utf-8") as file:
-            for line in file:
-                row = [item.strip() for item in line.split('\t')]
-                raw_data.append(row)
-    except FileNotFoundError:
-        print(f"Error: The file {file_path} was not found.")
-    except Exception as e:
-        print(f"An error occurred: {e}")
+        df = pd.read_csv(csv_file_path)
 
-    try:
-        data = [row[3:] for row in raw_data]
-        data.pop(0)
-        sentences = [item for sublist in data for item in sublist]
-    except Exception as e:
-        print("An error occured with the list")
+        required_cols = ["Entity","Definition1","Definition2"]
 
-    return sentences
+        if not all (col in df.columns for col in required_cols):
+            missing_cols = [col for col in required_cols if col not in df.columns]
+            print(f"Missing required columns in CSV: {missing_cols}")
+            return
+
+        df["Cleaned_defintion1"] = df["Definition1"].apply(lambda x : str(x).strip().replace("&quote;", '"').replace('""', '"').lstrip("- ").strip())
+        df["Cleaned_defintion2"] = df["Definition2"].apply(lambda x : str(x).strip().replace("&quote;", '"').replace('""', '"').lstrip("- ").strip())
+        df["Combined_Row_Definition"] = df.apply(lambda x : ". ".join(filter(None, [x["Cleaned_defintion1"], x["Cleaned_defintion2"]])), axis = 1)
+
+        consolidated_data = df.groupby("Entity")["Combined_Row_Definition"].apply(lambda x: ". ".join(filter(None, x))).to_dict()
+
+        sentences = list(consolidated_data.values())
+        return sentences
+    except Exception as e:
+        print(f"An Error occured: {e}")
 
 def prep_bbc() -> list:
     file_path = "data/bbc.csv"
