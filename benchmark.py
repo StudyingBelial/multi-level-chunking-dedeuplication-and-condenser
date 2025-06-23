@@ -33,47 +33,47 @@ def aggregate_similarity(base_embeddings, processed_embeddings):
 
     return similarity_score
 
-def cluster_similarity(true_chunks, predicted_chunks):
-    try:
-        nlp = spacy.load("en_core_web_sm")
-    except OSError:
-        download("en_core_web_sm")
-        nlp = spacy.load("en_core_web_sm")
-
-    truth_sentences = []
+def cluster_similarity(true_chunks, predicted_chunks, nmi_method = "geometric", v_beta = 0.85):
+    truth_sentences = {}
+    true_sentence_extracted = 0
     for index, chunk in enumerate(true_chunks):
-        doc = nlp(chunk)
-        for sentence in doc.sents:
-            truth_sentences.append(
-                {
-                    "sentence" : sentence.text,
-                    "chunk_id" : index
-                }
-            )
+        for sentence in chunk:
+            sentence = sentence.strip()
+            if sentence:
+                truth_sentences[sentence] = index
+                true_sentence_extracted += 1
 
-    predicted_sentences = []
+
+    predicted_sentences = {}
+    predicted_sentences_extracted = 0
     for index, chunk in enumerate(predicted_chunks):
-        doc = nlp(chunk)
-        for sentence in doc.sents:
-            predicted_sentences.append({
-                "sentence" : sentence.text,
-                "chunk_id" : index
-            })
+        for sentence in chunk:
+            sentence = sentence.strip()
+            if sentence:
+                predicted_sentences[sentence] = index
+                predicted_sentences_extracted += 1
+
+    labels_true = []
+    labels_pred = []
+    sentence_matched_for_comparisoon = 0
+
+    for sentence, id in predicted_sentences.items():
+        if sentence in truth_sentences:
+            labels_true.append(truth_sentences[sentence])
+            labels_pred.append(id)
+            sentence_matched_for_comparisoon += 1
 
     similarity_score = {}
-
-    labels_true = [item["chunk_id"] for item in truth_sentences]
-    labels_pred = [item["chunk_id"] for item in predicted_sentences]
 
     ari_score = adjusted_rand_score(labels_true, labels_pred)
     nmi_score = normalized_mutual_info_score(
         labels_true, 
         labels_pred, 
-        average_method = "arithmetic")
+        average_method = nmi_method)
     v_measure = v_measure_score(
         labels_true, 
         labels_pred, 
-        beta = 0.8)
+        beta = v_beta)
 
     similarity_score["ari"] = ari_score
     similarity_score["nmi"] = nmi_score
