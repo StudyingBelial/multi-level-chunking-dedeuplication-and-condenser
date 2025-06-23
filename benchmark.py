@@ -34,7 +34,6 @@ def aggregate_similarity(base_embeddings, processed_embeddings):
     return similarity_score
 
 def cluster_similarity(true_chunks, predicted_chunks):
-    # Download the spaCy small English model programmatically if not already installed
     try:
         nlp = spacy.load("en_core_web_sm")
     except OSError:
@@ -63,9 +62,18 @@ def cluster_similarity(true_chunks, predicted_chunks):
 
     similarity_score = {}
 
-    ari_score = adjusted_rand_score()
-    nmi_score = normalized_mutual_info_score()
-    v_measure = v_measure_score()
+    labels_true = [item["chunk_id"] for item in truth_sentences]
+    labels_pred = [item["chunk_id"] for item in predicted_sentences]
+
+    ari_score = adjusted_rand_score(labels_true, labels_pred)
+    nmi_score = normalized_mutual_info_score(
+        labels_true, 
+        labels_pred, 
+        average_method = "arithmetic")
+    v_measure = v_measure_score(
+        labels_true, 
+        labels_pred, 
+        beta = 0.8)
 
     similarity_score["ari"] = ari_score
     similarity_score["nmi"] = nmi_score
