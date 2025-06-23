@@ -77,7 +77,3 @@ def import_textbook(hf_key : str):
     df = pd.DataFrame(all_data, columns=["textbook"])
 
     df.to_csv("data/textbooks.csv", index=False)
-
-#import_parade()
-# import_bbc("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")
-# import_textbook("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")

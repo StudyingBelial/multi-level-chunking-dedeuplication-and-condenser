@@ -1,6 +1,4 @@
 import numpy as np
-import spacy
-from spacy.cli import download
 from sklearn.metrics.pairwise import cosine_similarity, adjusted_rand_score, normalized_mutual_info_score, v_measure_score
 
 def aggregate_similarity(base_embeddings, processed_embeddings):
@@ -11,7 +9,6 @@ def aggregate_similarity(base_embeddings, processed_embeddings):
     base_embeddings = np.array(base_embeddings)
     processed_embeddings = np.array(processed_embeddings)
 
-
     if base_embeddings.size == 0:
         raise ValueError("Base embeddings is empty")
 
@@ -20,13 +17,13 @@ def aggregate_similarity(base_embeddings, processed_embeddings):
 
     try:
         avg_base_embed = np.mean(base_embeddings, axis = 0)
-        avg_preocessed_embed = np.mean(processed_embeddings, axis = 0)
+        avg_processed_embed = np.mean(processed_embeddings, axis = 0)
     except Exception as e:
         print("An error occured while creating embeddings averages")
         print(e)
 
     try:
-        similarity_score = cosine_similarity(np.array([avg_base_embed]), np.array([avg_preocessed_embed]))[0][0]
+        similarity_score = cosine_similarity(np.array([avg_base_embed]), np.array([avg_processed_embed]))[0][0]
     except Exception as e:
         print("An error occured while calculating similarity score")
         print(e)
@@ -42,7 +39,6 @@ def cluster_similarity(true_chunks, predicted_chunks, nmi_method = "geometric", 
             if sentence:
                 truth_sentences[sentence] = index
                 true_sentence_extracted += 1
-
 
     predicted_sentences = {}
     predicted_sentences_extracted = 0
