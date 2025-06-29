@@ -81,5 +81,3 @@ def import_textbook(hf_key : str):
     df.to_csv("data/textbooks.csv", index=False)
 
     print("Loaded Textbook")
-
-import_bbc("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")
