@@ -66,8 +66,11 @@ There are a total of 4 benchmark scores measured by the system:
 
 ## Associated Research Paper
 **Title:** **Scalable Multi-Level Semantic Chunking for Condensation and Deduplication of Large-Scale Text Corpora via Hierarchical Clustering**
+
 **Author:** **Aarya Bhandari** aka **StudyingBelial**
+
 **Publication:** TO BE SEEN
+
 **Abstract Summary:** Large Language Models (LLMs) have revolutionized text summarization and information extraction, yet their application for massive, multi-document and cataloguing remains computationally challenging, primarily dud to the exponential complexity presented by cross-document semantic comparison. This paper proposes a novel multi-stage text chunking methodology designed to overcome this scalability bottleneck. This approach first employs an agglomerative clustering algorithm to loosely group a large corpus of unprocessed text data into large, topically related macro-chunks. Subsequently, within each macro-chunk, distance-based semantic chunking is applied to identify atomic, semantically distinct units, effectively eliminating the need for computationally intensive global pairwise comparisons O (N²) where N is the total number of sentences and reducing it to a more efficient O (M * n²) where n is (N/M) and M is the number of macro-chunks. While this does not eliminate the exponential nature of the problem, the proposed solution turns the base into a fraction of the original. Experimental results on diverse large-scale text corpora demonstrates significant computational savings and improved efficiency in producing high-quality semantic chunks, making large scale text preprocessing for condensation and summarization practical.
 
 ## License
