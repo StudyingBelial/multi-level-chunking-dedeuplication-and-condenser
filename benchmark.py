@@ -4,18 +4,21 @@ from sklearn.metrics import adjusted_rand_score, normalized_mutual_info_score, v
 
 def aggregate_similarity(base_embeddings, processed_embeddings):
 
+    # Checking for Null
     if base_embeddings is None or processed_embeddings is None:
         raise ValueError("No value passed for embeddings")
 
+    # Converting to Numpy Array for proper calculation
     base_embeddings = np.array(base_embeddings)
     processed_embeddings = np.array(processed_embeddings)
 
+    # Checking for Numpy Array length of 0
     if base_embeddings.size == 0:
         raise ValueError("Base embeddings is empty")
-
     if processed_embeddings.size == 0:
         raise ValueError("Processed Embeddings is empty")
 
+    # Calculating the average of embeddings
     try:
         avg_base_embed = np.mean(base_embeddings, axis = 0)
         avg_processed_embed = np.mean(processed_embeddings, axis = 0)
@@ -23,6 +26,7 @@ def aggregate_similarity(base_embeddings, processed_embeddings):
         print("An error occured while creating embeddings averages")
         print(e)
 
+    # Calculating the Aggregate Cosine Similarity
     try:
         similarity_score = cosine_similarity(np.array([avg_base_embed]), np.array([avg_processed_embed]))[0][0]
     except Exception as e:
@@ -34,6 +38,8 @@ def aggregate_similarity(base_embeddings, processed_embeddings):
 def cluster_similarity(true_chunks, predicted_chunks, nmi_method = "geometric", v_beta = 0.85):
     truth_sentences = {}
     true_sentence_extracted = 0
+
+    # Extracting all the True Sentences from original chunks
     for index, chunk in enumerate(true_chunks):
         for sentence in chunk:
             sentence = sentence.strip()
@@ -43,6 +49,8 @@ def cluster_similarity(true_chunks, predicted_chunks, nmi_method = "geometric", 
 
     predicted_sentences = {}
     predicted_sentences_extracted = 0
+
+    # Extracting all the Predicted Sentences from processed chunks
     for index, chunk in enumerate(predicted_chunks):
         for sentence in chunk:
             sentence = sentence.strip()
@@ -54,6 +62,7 @@ def cluster_similarity(true_chunks, predicted_chunks, nmi_method = "geometric", 
     labels_pred = []
     sentence_matched_for_comparisoon = 0
 
+    # Comparing the true and predicted sentences
     for sentence, id in predicted_sentences.items():
         if sentence in truth_sentences:
             labels_true.append(truth_sentences[sentence])
@@ -61,7 +70,7 @@ def cluster_similarity(true_chunks, predicted_chunks, nmi_method = "geometric", 
             sentence_matched_for_comparisoon += 1
 
     similarity_score = {}
-
+    # Calculating all the scores
     ari_score = adjusted_rand_score(labels_true, labels_pred)
     nmi_score = normalized_mutual_info_score(
         labels_true, 

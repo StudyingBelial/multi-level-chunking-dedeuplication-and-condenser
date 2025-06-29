@@ -21,6 +21,7 @@ def prep_parade() -> list:
             print(f"Missing required columns in CSV: {missing_cols}")
             return
 
+        # Cleaning all the quotation marks and their escape sequences
         df["Cleaned_defintion1"] = df["Definition1"].apply(lambda x : str(x).strip().replace("&quote;", '"').replace('""', '"').lstrip("- ").strip())
         df["Cleaned_defintion2"] = df["Definition2"].apply(lambda x : str(x).strip().replace("&quote;", '"').replace('""', '"').lstrip("- ").strip())
         df["Combined_Row_Definition"] = df.apply(lambda x : ". ".join(filter(None, [x["Cleaned_defintion1"], x["Cleaned_defintion2"]])), axis = 1)

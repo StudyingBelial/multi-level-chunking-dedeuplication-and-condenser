@@ -65,10 +65,10 @@ There are a total of 4 benchmark scores measured by the system:
     This score also goes from 0 to 1 where 1 represents a perfect score after accounting for the v_beta.
 
 ## Associated Research Paper
-**Title:** ****
+**Title:** **TO BE SEEN**
 **Author:** **Aarya Bhandari** aka **StudyingBelial**
-**Publication:**
-**Abstract Summary:**
+**Publication:** TO BE SEEN
+**Abstract Summary:** TO BE SEEN
 
 ## License
 This project is licensed under the [MIT License](LICENSE)
