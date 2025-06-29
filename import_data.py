@@ -63,6 +63,8 @@ def import_bbc(hf_key : str):
     df = pd.DataFrame(texts, columns=["text"])
     df.to_csv("data/bbc.csv", index=False)
 
+    print("Loaded BBC")
+
 def import_textbook(hf_key : str):
     login(hf_key)
 
@@ -77,3 +79,7 @@ def import_textbook(hf_key : str):
     df = pd.DataFrame(all_data, columns=["textbook"])
 
     df.to_csv("data/textbooks.csv", index=False)
+
+    print("Loaded Textbook")
+
+import_bbc("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")

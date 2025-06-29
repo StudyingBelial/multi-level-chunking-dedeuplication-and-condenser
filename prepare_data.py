@@ -9,7 +9,6 @@ DO NOT TOUCH THE REGEX SUB in this file,
 I DO NOT UNDERSTAND MOST OF IT, the files will explode if you do.
 """
 def prep_parade() -> list:
-    raw_data = []
     csv_file_path = "data/PARADE_dataset/parade.csv"
 
     try:
@@ -29,7 +28,33 @@ def prep_parade() -> list:
         consolidated_data = df.groupby("Entity")["Combined_Row_Definition"].apply(lambda x: ". ".join(filter(None, x))).to_dict()
 
         sentences = list(consolidated_data.values())
-        return sentences
+        corrected_sentences = []
+        for text_data in sentences:
+            # 1. Remove markdown headings (e.g., # Heading, ## Subheading)
+            # This should be done early to clean structural elements.
+            text_data = re.sub(r"^#+\s*", "", text_data, flags=re.MULTILINE)
+
+            # 2. Handle escaped characters (like \' to ' or \" to ")
+            # This needs to be done *before* general backslash handling or newline processing.
+            text_data = re.sub(r"\\([^\s\n])", r"\1", text_data) # Handles \' to ', \" to ", etc., excludes \n
+            text_data = re.sub(r"\\n", "\n", text_data)          # Converts \\n to actual \n
+
+            # 3. Remove bold markdown (**text**)
+            text_data = re.sub(r"\*\*([^\*]+?)\*\*", r"\1", text_data)
+
+            # 4. Handle newlines: replace one or more newlines with ". "
+            text_data = re.sub(r"\n+", ". ", text_data)
+
+            # 5. Fix specific unwanted patterns created by previous steps
+            text_data = re.sub(r":\. ", ": ", text_data) # Replace ":. " with ": "
+
+            # 6. Consolidate multiple dots and clean up spacing
+            text_data = re.sub(r"\.{2,}", ". ", text_data) # Replace multiple dots with a single dot followed by a space
+            text_data = re.sub(r'\.{2,}\s*', '. ', text_data)
+            text_data = re.sub(r"\s+", " ", text_data).strip() # Consolidate multiple spaces and strip leading/trailing
+
+            corrected_sentences.append(text_data)
+        return corrected_sentences
     except Exception as e:
         print(f"An Error occured: {e}")
 

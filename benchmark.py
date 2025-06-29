@@ -1,5 +1,6 @@
 import numpy as np
-from sklearn.metrics.pairwise import cosine_similarity, adjusted_rand_score, normalized_mutual_info_score, v_measure_score
+from sklearn.metrics.pairwise import cosine_similarity
+from sklearn.metrics import adjusted_rand_score, normalized_mutual_info_score, v_measure_score
 
 def aggregate_similarity(base_embeddings, processed_embeddings):
 
